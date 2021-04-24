@@ -10,6 +10,8 @@
     Copyright (C) 2019 The noVNC Authors
     noVNC is licensed under the MPL 2.0 (see LICENSE.txt)
     This file is licensed under the 2-Clause BSD license (see LICENSE.txt).
+    
+    Modified by Geschafft.co
 
     Connect parameters are provided in query string:
         http://example.com/?host=HOST&port=PORT&scale=true
@@ -30,13 +32,6 @@
         html {
             height: 100%;
         }
-
-        #top_bar {
-            background-color: #6e84a3;
-            color: white;
-            font: bold 12px Helvetica;
-            padding: 6px 5px 4px 5px;
-            border-bottom: 1px outset;
         }
         #status {
             text-align: center;
@@ -75,14 +70,17 @@
             if (e.detail.clean) {
                 status("Disconnected");
             } else {
-                status("Something went wrong, connection is closed");
+                status("Something went wrong and the connection had to be closed.");
             }
         }
 
         // When this function is called, the server requires
         // credentials to authenticate
         function credentialsAreRequired(e) {
-            const password = prompt("Password Required:");
+            var password = readQueryVariable("password", "")
+            if (password == "") {
+              var password = prompt("We need a password to access your host.");
+            }
             rfb.sendCredentials({ password: password });
         }
 
@@ -171,7 +169,7 @@
 </head>
 
 <body>
-    <div id="top_bar">
+    <div id="top_bar" style="display:none;">
         <div id="status">Loading</div>
         <div id="sendCtrlAltDelButton">Send CtrlAltDel</div>
     </div>
